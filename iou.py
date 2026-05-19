@@ -1,0 +1,28 @@
+import numpy as np
+import cv2
+import os
+
+
+def compute_iou(mask_pred, mask_gt):
+
+    pred_binary = (mask_pred > 0).astype(np.uint8)
+    gt_binary = (mask_gt > 0).astype(np.uint8)
+    intersection = np.logical_and(pred_binary, gt_binary)
+    union = np.logical_or(pred_binary, gt_binary)
+    intersection_count = np.sum(intersection)
+    union_count = np.sum(union)
+    if union_count == 0:
+        return 0.0
+    iou = intersection_count / union_count
+    return iou
+
+
+
+if __name__ == "__main__":
+    gt_image_path = "../my_mask.png"
+    pred_image_path = "predictions/T1_coco/my.jpg"
+    pred_mask = cv2.imread(pred_image_path)
+    gt_mask = cv2.imread(gt_image_path)
+    iou_value = compute_iou(pred_mask, gt_mask)
+    print(f"IoU: {iou_value:.4f}")
+
